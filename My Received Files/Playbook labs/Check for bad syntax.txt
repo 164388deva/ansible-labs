@@ -1,0 +1,8 @@
+Check for bad syntax
+=======================
+
+One can check to see if code contains any syntax errors by running the playbook.
+
+Check for bad syntax:
+
+ansible-playbook playbooks/PLAYBOOK_NAME.yml --syntax-check

@@ -1,0 +1,18 @@
+[root@server ansible]# ansible
+ansible               ansible-connection    ansible-doc           ansible-galaxy-2      ansible-playbook-2    ansible-pull-2.6
+ansible-2             ansible-console       ansible-doc-2         ansible-galaxy-2.6    ansible-playbook-2.6  ansible-vault
+ansible-2.6           ansible-console-2     ansible-doc-2.6       ansible-inventory     ansible-pull          ansible-vault-2
+ansible-config        ansible-console-2.6   ansible-galaxy        ansible-playbook      ansible-pull-2        ansible-vault-2.6
+
+
+#ansible-config
+#ansible-connection
+#ansible-console
+#ansible-vault
+#ansible-doc
+#ansible-galaxy
+#ansible-inventory
+#ansible-playbook
+
+
+Use the man command to find out more about these commands

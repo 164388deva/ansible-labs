@@ -1,0 +1,44 @@
+Ansible lineinfile module
+============================
+############################
+
+lineinefile + with_items
+
+- name: add groups to sudoers
+  lineinfile: dest=/etc/sudoers regexp="^root(\s+)ALL=(ALL)(\s+)ALL" insertafter="^root" line='{{ item }}' state=present backup=yes backrefs=yes
+  with_items:
+    - '%admin\tALL=(ALL:ALL)\tALL'
+    - '%users\tALL=(ALL:ALL)\tALL'
+  tags: sudoers
+Using lineinfile to comment out a line:
+
+ansible -m lineinfile -i hosts -e "ansible_ssh_port=2222" -a "dest=/etc/aliases regexp='^(.*)root:(.*)' line='#root:           systems@domain.com'" host-group --limit "host1"
+BEFORE:
+root:           systems@domain.com
+
+AFTER:
+#root:           systems@domain.com
+Ansible ini_file module
+This module is a life-saver when modifying ini type files with many changes.
+
+The configuration file may look like this:
+
+[DEFAULT]
+# Print more verbose output (set logging level to INFO instead of default WARNING level).
+# verbose = False
+# Print debugging output (set logging level to DEBUG instead of default WARNING level).
+# debug = False
+ansible multi-os -m ini_file -a "dest=/etc/setting.conf section=DEFAULT option=verbose value=True backup=yes" -i hosts
+
+ini_file module example:
+
+- name: enable verbose mode
+  ini_file: dest=/etc/setting.conf section=DEFAULT option=verbose value=True backup=yes
+  tags: configuration
+After change:
+
+[DEFAULT]
+# Print more verbose output (set logging level to INFO instead of default WARNING level).
+verbose = True
+# Print debugging output (set logging level to DEBUG instead of default WARNING level).
+# debug = False

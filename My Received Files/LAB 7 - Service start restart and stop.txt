@@ -1,0 +1,47 @@
+Starting/Enabling a Service
+==============================
+[root@server ansible]# ansible -i hosts all -m service -a 'name=httpd enabled=ye                                                       s state=started'
+192.168.0.11 | SUCCESS => {
+    "changed": true,
+    "enabled": true,
+    "name": "httpd",
+    "state": "started"
+}
+localhost | SUCCESS => {
+    "changed": true,
+    "enabled": true,
+    "name": "httpd",
+    "state": "started"
+}
+
+=================================
+Stopping a Service
+
+ansible -i hosts all -m service -a 'name=httpd state=stopped'
+192.168.0.11 | SUCCESS => {
+    "changed": true,
+    "name": "httpd",
+    "state": "stopped"
+}
+localhost | SUCCESS => {
+    "changed": true,
+    "name": "httpd",
+    "state": "stopped"
+}
+
+======================================
+
+Restarting a Service
+[root@server ansible]# ansible -i hosts all -m service -a 'name=httpd state=restarted'
+192.168.0.11 | SUCCESS => {
+    "changed": true,
+    "name": "httpd",
+    "state": "started"
+}
+localhost | SUCCESS => {
+    "changed": true,
+    "name": "httpd",
+    "state": "started"
+}
+
+As you can see the state variable is modified to started, restarted and stopped status to manage the service.

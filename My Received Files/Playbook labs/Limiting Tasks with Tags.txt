@@ -1,0 +1,9 @@
+Limiting Tasks with Tags
+=============================
+
+Limit to all tags matching install
+
+ansible-playbook playbooks/PLAYBOOK_NAME.yml --tags 'install'
+Skip any tag matching sudoers
+
+ansible-playbook playbooks/PLAYBOOK_NAME.yml --skip-tags 'sudoers'

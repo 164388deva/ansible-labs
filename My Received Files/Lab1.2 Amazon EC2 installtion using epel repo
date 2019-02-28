@@ -1,0 +1,13 @@
+Installation on Amazon linux
+===========================================
+Ansible is not part of the amazon repo so we have to install the epel repo to download ansible and install in ec2 instance. Alternatively, we can use pip install ansible 
+
+
+yum update
+yum install wget
+
+	wget -r --no-parent -A 'epel-release-*.rpm' http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/
+rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-*.rpm
+	ls -l /etc/yum.repos.d/
+yum install epel-release
+yum install ansible

@@ -1,0 +1,90 @@
+[?2/?27/?2019 3:40 PM]  Lodha, Ajay Kumar:  
+No Title 
+Steps to install and configure Ansible 
+========================================
+
+Launch 2 EC2 instances in the same VPC (same subnet or differnt subnet will be fine but same vpc) 
+Tag one instance as master and the other as client
+
+For RHEL 7
+==============
+1. wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+For Rhel 6
+===============
+
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm 
+
+rpm -ivh epel-release-latest-7.noarch.rpm
+yum --enablerepo=epel install ansible
+
+2. Create entries for your clients in the /etc/hosts file 
+
+vi /etc/hosts 
+<private ip of master > <name of the master> 
+<private ip of the client> < name of the client> 
+
+esc :wq! 
+
+
+3. Allow password less authentication from master to client
+
+a) in the ansible client system, open the file /etc/ssh/sshd_config 
+
+vi /etc/ssh/sshd_config , and change the value of "PasswordAuthentication no" to 
+
+"PasswordAuthentication yes". 
+
+also set the value "PermitRootLogin no"
+
+to "PermitRootLogin yes"
+Save the file and exits 
+
+#service sshd restart 
+
+Then, set a password for the root user. run the passwd command as root 
+
+#passwd 
+
+
+b) In the ansible master server run the below command to create the ssh keys ( In this example we are using root account only) 
+
+#ssh-keygen (select default values) 
+
+This command will create the ssh key pair for the root user
+
+
+c) from the master server try to ssh into the client server 
+
+#ssh root@<private ip of the client> 
+
+it should ask for the password 
+
+d) Run the command to set the password less authentication. 
+
+#ssh-copy-id -i root@<client IP> 
+
+if the command is successfull, ssh will not ask for the password next time. 
+
+
+4. Set the /etc/ansible/hosts file with the correct entry of all the client servers. 
+
+
+[web]
+172.31.19.190
+[db]
+172.31.34.95
+
+5. That's it. Ansible is ready to be used. Try the below commands 
+
+
+ansible all -m ping
+ansible all -m shell "uname -a"
+ansible all -m yum -a "name=httpd state=present"
+ansible all -m shell -a "/sbin/service httpd start"
+
+
+
+
+ 
+ 

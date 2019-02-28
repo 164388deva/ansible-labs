@@ -1,0 +1,16 @@
+[?2/?27/?2019 2:51 PM]  Lodha, Ajay Kumar:  
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm 
+ 
+
+cd /etc/yum.repos.d
+ll
+cat epel.repo
+ 
+[?2/?27/?2019 3:04 PM]  Patil, Birappa:  
+ yum --enablerepo=epel install ansible 
+
+vi /etc/hosts
+ 
+[?2/?27/?2019 3:14 PM]  Lodha, Ajay Kumar:  
+vi /etc/sysconfig/network
+ 

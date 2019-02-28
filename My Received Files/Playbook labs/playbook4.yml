@@ -1,0 +1,14 @@
+- hosts: 127.0.0.1
+  user: root
+  tasks:
+    - name: install nginx
+      apt: pkg=nginx state=present
+
+    - name: start nginx every bootup
+      service: name=nginx state=started enabled=yes
+
+    - name: do something in the shell
+      shell: echo hello > /tmp/abc.txt
+
+    - name: install bundler
+      gem: name=bundler state=latest

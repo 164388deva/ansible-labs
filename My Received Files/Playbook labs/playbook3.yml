@@ -1,0 +1,11 @@
+---
+  hosts: all
+
+  task:
+  - name: setup ftp
+    yum: name=vsftpd state=installed
+
+  - name: start ftp
+    service: name=vsftpd state=started enabled=yes
+...
+

@@ -1,0 +1,92 @@
+How To - Ansible adhoc commands (One Liners)
+###################################################
+
+
+# ansible all -m ping -f 25
+
+To run command on all servers to check reach ability from ansible point of view with 25 parallel forks when you logged in as normal user (user1) and using ansible privilege of another normal user (normaluser) 
+===============================================
+
+
+# sudo -u normaluser ansible all -m ping -f 25
+
+To run a command on list of servers (IP addresses) specified in a text file with 25 parallel forks with current user (i.e. root or normaluser) 
+
+==================================================================
+
+# ansible all -i /tmp/my-inventory -m ping -f 25
+
+To run a command on list of servers (IP addresses) specified in a text file with 25 parallel forks when you logged in as normal user (user1) and using ansible privilege of another normal user (normaluser) 
+====================================================================
+
+# sudo -u normaluser ansible all -i /tmp/my-inventory -m ping -f 25
+
+To run command on all servers in a group with 25 parallel forks with current user (i.e. root or normaluser) 
+# ansible all -a "df -h" -f 25
+To run command on all servers in a group with 25 parallel forks when you logged in as normal user (user1) and using ansible privilege of another normal user (normaluser) 
+# sudo -u normaluser ansible all -a "df -h" -f 25
+To run command which requires super user rights on all servers in a group with 25 parallel forks with current user (i.e. root) 
+# ansible all -a "/etc/init.d/snmpd restart" -f 25
+To run command which requires super user rights on all servers in a group with 25 parallel forks with current user (i.e. normaluser) 
+# ansible all -a "/etc/init.d/snmpd restart" -f 25 --sudo 
+To run command which requires super user rights on all servers in a group with 25 parallel forks when you logged in as normal user (user1) and using ansible privilege of another normal user (normaluser) 
+# sudo -u normaluser ansible all -a "/etc/init.d/snmpd restart " -f 25 --sudo 
+Ping Module
+To limit ping for random first 10 servers from a group of hosts defined in /etc/ansible/hosts file 
+# sudo -u normaluser all dev -m ping --limit allvmhosts[0-10]
+To limit Ping some servers from "api" group of hosts defined in /etc/ansible/hosts file i.e. [11 to 20] 
+# sudo -u normaluser ansible all -m ping --limit allvmhosts[11-20]
+In case of JSON Error "Error: ansible requires a json module, none found!" Try your command in raw mode as below 
+# sudo -u normaluser ansible all -m ping  -m raw
+Service Module
+To install a service on all servers in a group using service module 
+# ansible all -m service -a "name=snmpd state=installed"
+To start a service on all servers in a group using service module 
+# ansible all -m service -a "name=snmpd state=started"
+To stop a service on all servers in a group using service module 
+# ansible all -m service -a "name=snmpd state=stopped"
+To restart a service on all servers in a group using service module 
+# ansible all -m service -a "name=snmpd state=restarted"
+To reload a service on all servers in a group using service module 
+# ansible all -m service -a "name=snmpd state=reloaded"
+To enable a service on all servers in a group using service module to get started in OS startup/bootup 
+# ansible all -m service -a "name=snmpd enabled=yes"
+To disable a service on all servers in a group using service module to get started in OS startup/bootup 
+# ansible all -m service -a "name=snmpd enabled=no"
+User Module
+To add a user 'sam' and assign shell as /bin/bash, secondary group as wheel to it on a group on all servers in a group 
+# sudo -u normaluser ansible all -m user -a "name=sam shell=/bin/bash groups=wheel"
+To add the user 'sam' with a specific uid and a primary group of 'admin' on all servers in a group 
+# sudo -u normaluser ansible all -m user -a "name=sam comment="Samual Pol" uid=1040 group=admin"
+To add the user 'sam' with a bash shell, appending the group 'admins' and 'developers' to the user's groups on all servers in a group 
+# sudo -u normaluser ansible all -m user -a "name=sam shell=/bin/bash groups=admins,developers append=yes"
+To Remove the user 'sam' from all servers in a group 
+# sudo -u normaluser ansible all -m user -a "name=sam state=absent remove=yes"
+Shell Module
+To create a backup file from command line with sudo on a group 
+# sudo -u normaluser ansible all -m shell -a "cp /etc/sudoers /etc/sudoer_DDMMYYYY" --sudo
+To replace content of a file with special characters with sudo on a group 
+# sudo -u normaluser ansible all -m shell -a "sed -i 's|\# %wheel\tALL=(ALL)\tALL|%wheel\tALL=(ALL)\tALL|g' /etc/sudoers" --sudo
+To change primary group of a user on a group 
+# sudo -u normaluser ansible all -m shell -a "usermod -aG wheel idcadm"
+To execute the command in remote shell by specifying stdout going to the specified file on all remote servers in a group 
+# sudo -u normaluser ansible all -m shell -a "somescript.sh >> somelog.txt"
+To change the working directory to somedir/ before executing the command 
+# sudo -u normaluser ansible all -m shell -a "somescript.sh >> somelog.txt chdir=somedir/"
+File Module =
+To change permissions of a file on all servers in a group 
+# sudo -u normaluser ansible all -m file  -a "path=/usr/bin/sudo  state=touch mode='4755' " --sudo 
+To change file ownership, group and mode using octal numbers (Note: first digit should always be 0 whenever octal used) 
+# sudo -u normaluser ansible all -m file  -a "path=/etc/ntp.conf owner=ntp group=ntp mode=0644"
+To create symbolic link 
+# sudo -u normaluser ansible all -m file  -a "src=/file/to/link/to dest=/path/to/symlink owner=sam group=sam state=link"
+To touch a file, using symbolic modes to set the permissions (equivalent to 0644) 
+# sudo -u normaluser ansible all -m file  -a "path=/etc/test.conf state=touch mode='u=rw,g=r,o=r'"
+
+
+Replace Module
+To replace a particular line in a file on a group 
+# sudo -u normaluser ansible all -m replace -a "dest=/root/test.sh regexp='^(\sread -p \"gateway recover after nodes \" gateway_recover_after_nodes)$' replace='XXXXXXXXX'"
+lineinfile Module
+To append a line in file use lineinfilemodule on a group 
+# sudo -u normaluser ansible all -m lineinfile  -a "dest=/etc/sudoers_07May2015 line='# Sudo access for running passwd command'"

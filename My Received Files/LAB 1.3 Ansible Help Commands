@@ -1,0 +1,24 @@
+1. Ansible help command 
+================================
+
+#ansible -h 
+
+
+2. Ansible man pages 
+================================
+
+#man ansible-doc
+#man ansible 
+
+
+
+List all installed modules with
+==================================
+
+ansible-doc --list
+Document a particular module with
+
+ansible-doc <module>
+Show playbook snippet for specified module
+
+ansible-doc -i <module>

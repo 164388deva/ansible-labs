@@ -1,0 +1,4 @@
+Installing docker using ansible commands
+=========================================
+
+ansible -i hosts all -m yum -a "name=docker state=latest"

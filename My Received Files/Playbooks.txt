@@ -1,0 +1,145 @@
+[?28-?02-?2019 14:22]  Lodha, Ajay Kumar:  
+No Title 
+Playbooks
+===============
+
+Playbooks are Ansible’s configuration, deployment, and orchestration language. 
+They can assign different roles, perform tasks like copying or deleting files/folders, make use of mature modules that shifts most of the functionality or
+ substitute variables to make your deployments dynamic and re-usable.
+
+Playbooks define your deployment steps and configuration. They are modular and can contain variables. They can be used to orchestrate steps across multiple machines. 
+They are configuration files written in simple YAML file which is the Ansible automation language. They can contain multiple tasks and can make use of "mature" modules.
+
+Here is an example of a simple Playbook.
+
+cat simpleplbook.yaml
+---
+
+- hosts: production
+remote_user: root
+
+tasks:
+- name: Setup FTP
+yum: pkg=vsftpd state=installed
+- name: start FTP
+service: name=vsftpd state=started enabled=yes
+
+This is a simple playbook with two tasks as below:
+===================================================
+
+Install FTP server
+Ensure the Service status
+
+
+Let's see each statement in details
+=====================================
+
+- hosts: server  -   This selects the inventory host to initiate this process.
+
+remote_user: root  - This specifies the user which is meant to execute this process on the target servers.
+tasks:
+1. - name: Setup FTP
+2. yum: pkg=vsftpd state=installed
+3. - name: start FTP
+4. service: name=vsftpd state=started enabled=yes
+
+These specifies the two tasks which is meant to be performed while running this playbook.  We can divide it to four statements for more clarity.
+ First statement describes the task which is setting up an FTP server and the second statement performs that by choosing/installing the package on the target server.
+ Third statement describes the next task and fourth one ensure the service status by starting the FTP server and enable it on boot.
+
+==========================================
+Now let' see the output of this playbook.
+
+#ansible-playbook -i hosts simpleplbook.yaml
+
+
+
+We can see that playbooks are executed sequentially according to the tasks specified in the playbook. 
+First it chooses the inventory and then it starts performing the plays one by one.
+
+Application Deployments
+==========================
+
+cat webservers_setup.yaml
+---
+
+- hosts: webservers
+vars:
+- Welcomemsg: "Welcome to Ansible Application Deployment"
+
+tasks:
+- name: Setup Nginx
+yum: pkg=nginx state=installed
+- name: Copying the index page
+template: src=index.html dest=/usr/share/nginx/html/index.html
+- name: Enable the service on boot
+service: name=nginx enabled=yes
+- name: start Nginx
+service: name=nginx state=started
+
+
+Now running it 
+
+ansible-playbook -i hosts -s webservers_setup.yaml -u root
+
+PLAY [webservers] *************************************************************
+
+GATHERING FACTS ***************************************************************
+ok: [139.162.35.39] ok: [45.33.76.60]
+
+TASK: [Setup Nginx] ***********************************************************
+changed: [139.162.35.39] changed: [45.33.76.60]
+
+TASK: [Copying the index page] ************************************************
+changed: [139.162.35.39] changed: [45.33.76.60]
+
+TASK: [Enable the service on boot] ********************************************
+changed: [139.162.35.39] changed: [45.33.76.60]
+
+TASK: [start Nginx] ***********************************************************
+changed: [139.162.35.39] changed: [45.33.76.60]
+
+PLAY RECAP ********************************************************************
+139.162.35.39 : ok=5 changed=4 unreachable=0 failed=0
+45.33.76.60 : ok=5 changed=4 unreachable=0 failed=0
+
+This playbook describes four tasks as evident from the result. After running this playbook, we can confirm the status by checking the target servers in the browser.
+
+ansiblewebserver
+
+Now, I'm planning to add a PHP Module namely php-gd to the target servers. I can edit my playbook to include that task too and run it again. Let's see what happens now. 
+My modified playbook is as below:
+
+linuxmonty@linuxmonty-Latitude-E4310:~$ cat webservers_setup.yaml
+---
+
+- hosts: webservers
+vars:
+- Welcomemsg: "Welcome to Nginx default page"
+- WelcomePHP: "PHP GD module enabled"
+
+tasks:
+- name: Setup Nginx
+yum: pkg=nginx state=installed
+- name: Copying the index page
+template: src=index.html dest=/usr/share/nginx/html/index.html
+- name: Enable the service on boot
+service: name=nginx enabled=yes
+- name: start Nginx
+service: name=nginx state=started
+- name: Setup PHP-GD
+yum: pkg=php-gd state=installed
+
+As you can see, I append these highlighted lines to my playbook. So this is how it goes now.
+#############################################################################
+
+ ansible-playbook -i hosts -s webservers_setup.yaml -u root
+
+#############################################################################
+
+On close analysis of this result, you can see that only two sections in this have reported modifications to the target servers. 
+One is the index file modification and other is the installation of our additional PHP module. Now we can evident the changes for the target servers in the browser.
+
+PHPmodule+Nginx
+ 
+ 

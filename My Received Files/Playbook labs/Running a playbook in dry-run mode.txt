@@ -1,0 +1,8 @@
+Running a playbook in dry-run mode
+######################################
+
+Sometimes it can be useful to see what Ansible might do, but without actually changing anything.
+
+One can run in dry-run mode like this:
+
+ansible-playbook playbooks/PLAYBOOK_NAME.yml --check

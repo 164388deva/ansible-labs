@@ -1,0 +1,123 @@
+ansible all --list-hosts
+  hosts (2):
+    localhost
+    192.168.0.11
+
+
+=====================================
+ansible all -m ping
+localhost | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+192.168.0.11 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+=====================================
+ansible centos -a 'yum update -y'
+
+To update all centos servers
+
+======================================
+Gathering facts
+
+ansible all -m setup
+ansible all -m setup |grep -i uptime
+ansible all -m setup |grep -i address
+ansible all -m setup |grep -i ipv4
+
+=====================================
+ansible localhost -m command  -a "uptime"
+localhost | SUCCESS | rc=0 >>
+ 17:11:02 up  2:19,  2 users,  load average: 0.00, 0.00, 0.00
+
+[root@server ansible]#
+[root@server ansible]#
+[root@server ansible]# ansible localhost -m shell  -a "uptime"
+localhost | SUCCESS | rc=0 >>
+ 17:11:09 up  2:19,  2 users,  load average: 0.15, 0.03, 0.01
+=====================================
+ansible -i hosts all -m command -a 'hostname'
+localhost | SUCCESS | rc=0 >>
+server
+
+192.168.0.11 | SUCCESS | rc=0 >>
+client1
+=======================================
+[root@server ansible]# ansible -i hosts all -m command -a 'hostname' -u root
+localhost | SUCCESS | rc=0 >>
+server
+
+192.168.0.11 | SUCCESS | rc=0 >>
+client1
+
+[root@server ansible]#
+[root@server ansible]# ansible -i hosts all -m command -a 'hostname' -u centos
+localhost | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: Permission denied (publickey,password).\r\n",
+    "unreachable": true
+}
+192.168.0.11 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: Permission denied (publickey,password).\r\n",
+    "unreachable": true
+}
+
+=================================================
+User module
+===================
+ansible -i hosts all -m user -a "name=admin password=<admin123>" ==> this is not crypto pass
+
+ansible -i inventory selection -m user -a 'name=username state=absent'
+
+ansible -i hosts all -m user -a "name=admin state=absent" -u root
+
+ansible -i hosts all -m user -a "name=admin state=absent"
+
+ansible -i hosts localhost -m user -a "name=admin"
+
+=======================================================
+copy module
+======================
+Usage : ansible -i inventory selection -m copy -a "src=file_name dest=file path to save"
+
+ansible -i hosts all -m copy -a "src=test.sh dest=/root/"
+
+file module 
+==================
+Now change the permission of the file and the owner
+ansible -i hosts production -m file -a "dest=/root/test.sh mode=600 owner=admin group=admin"
+
+================================================
+Creating a folder 
+==================
+
+ansible -i hosts all -m file -a "dest=/root/ansible mode=755 owner=admin group=admin state=directory" -u root
+
+==============================================
+Managing packages 
+===================
+ansible -i hosts localhost -m yum -a "name=vsftpd state=present"
+
+value of state must be one of: absent, installed, latest, present, removed, got: restart"
+
+to update the package 
+=======================
+ansible -i hosts all -m yum -a "name=httpd state=latest"
+
+=============================================== 
+Removing the packages 
+=========================
+ansible -i hosts all -m yum -a "name=httpd state=absent"
+
+Managing services 
+==============================
+Ansible provides the module service to attain that. We can use this module to enable on-boot and start/stop/restart services. Please see the examples for each case.
+
+
+
+
+
+	

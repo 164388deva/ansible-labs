@@ -1,0 +1,16 @@
+Running Ansible as a different user
+====================================
+
+There are multiple ways to control which user account is used when executing Ansible. It can be controlled via a user's ~/.ssh/config, via remote_user in Ansible or through the Ansible inventory.
+
+This has changed drastically between Ansible versions pre-2.0 and post 2.0
+
+
+When running from the command line, one can just specify which user account to run against directly. Please note that specifying a user can sometime conflict with a user defined in /etc/ansible/hosts
+
+Specifying a user:
+
+ansible-playbook playbooks/atmo_playbook.yml --user atmouser
+Using a specific SSH private key:
+
+ansible -m ping hosts --private-key=~/.ssh/keys/id_rsa -u centos

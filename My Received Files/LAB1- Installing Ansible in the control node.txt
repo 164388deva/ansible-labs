@@ -1,0 +1,16 @@
+Ansible LAB 1 - Ajay
+=======================
+1. Install Ansible in the server
+
+2. If it is centos linux just run the below command to install the ansible package from the EPEL repo
+
+# yum install ansible -y 
+
+3. If it is AWS ec2 instance, run the below command to install it 
+
+#pip install ansible 
+
+4. Check the installed version
+
+#ansible --version
+

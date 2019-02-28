@@ -1,0 +1,8 @@
+Passing Variables via CLI
+=============================
+
+Variables can be pesky, but sometimes are required to be passed in via the CLI. Any variable can be set via the command line. Often the command line is the be all, end all in variable overrides.
+
+Passing arguments:
+
+ansible-playbook playbooks/atmo_playbook.yml -e "ATMOUSERNAME=atmouser"
